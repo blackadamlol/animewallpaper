@@ -1,10 +1,14 @@
+import minato from "../images/minato (2).jpg"
+import minxkush from "../images/minato-kushina.jpg"
+import minato2 from "../images/minato.jpg"
+import naruto from "../images/naruto.jpg"
 const WallpaperData = [
     {
       series: 'Naruto',
       characters: [
         {
           name: 'Naruto Uzumaki',
-          img: 'https://example.com/naruto.jpg',
+          img: naruto,
         },
         {
           name: 'Sasuke Uchiha',
@@ -56,7 +60,11 @@ const WallpaperData = [
         },
         {
           name: 'Minato Namikaze',
-          img: 'https://example.com/minato.jpg',
+          img: minato,
+        },
+        {
+          name: "Minato Namikaze 2",
+          img: minato2,
         },
         {
           name: 'Kushina Uzumaki',

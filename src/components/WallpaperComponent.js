@@ -9,8 +9,7 @@ const WallpaperComponent = () => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const randomResults = getRandomAnimePictures();
-    setRandomPictures(randomResults);
+    handleSearch();
   }, []);
 
   const handleSearchChange = (e) => {
@@ -18,19 +17,7 @@ const WallpaperComponent = () => {
     setSearchTerm(term);
 
     if (term.length >= 3) {
-      const filteredResults = WallpaperData.filter((series) => {
-        const matchingCharacters = series.characters.filter((character) =>
-          character.name.toLowerCase().includes(term.toLowerCase())
-        );
-
-        return (
-          series.series.toLowerCase().includes(term.toLowerCase()) ||
-          series.genre.toLowerCase().includes(term.toLowerCase()) ||
-          matchingCharacters.length > 0
-        );
-      });
-
-      setSearchResults(filteredResults);
+      handleSearch();
     } else {
       setSearchResults([]);
     }
@@ -39,32 +26,62 @@ const WallpaperComponent = () => {
   const handleSearch = () => {
     setLoading(true);
 
-    const matchedSeries = WallpaperData.filter((series) =>
-      series.series.toLowerCase().includes(searchTerm.toLowerCase())
+    const matchedCharacters = WallpaperData.flatMap((series) =>
+      series.characters.filter((character) =>
+        character.name.toLowerCase().includes(searchTerm.toLowerCase())
+      )
     );
 
-    if (matchedSeries.length > 0) {
-      setSearchResults(matchedSeries);
-      setLoading(false);
+    if (matchedCharacters.length > 0) {
+      const sortedCharacters = sortSearchResults(matchedCharacters);
+      setSearchResults(sortedCharacters);
     } else {
-      const fuzzyMatchedSeries = WallpaperData.filter((series) => {
-        const similarity = stringSimilarity.compareTwoStrings(
-          searchTerm.toLowerCase(),
-          series.series.toLowerCase()
-        );
-        return similarity > 0.7; // Adjust the similarity threshold as needed
-      });
-
-      setSearchResults(fuzzyMatchedSeries);
-      setLoading(false);
+      setSearchResults([]);
     }
+
+    setLoading(false);
+  };
+
+  const sortSearchResults = (characters) => {
+    const termLower = searchTerm.toLowerCase();
+    const sortedCharacters = [...characters];
+
+    sortedCharacters.sort((a, b) => {
+      const aNameLower = a.name.toLowerCase();
+      const bNameLower = b.name.toLowerCase();
+
+      if (aNameLower === termLower) {
+        return -1; // Exact match should be at the top
+      } else if (bNameLower === termLower) {
+        return 1; // Exact match should be at the top
+      } else {
+        // Sort by string similarity score
+        const aSimilarity = stringSimilarity.compareTwoStrings(aNameLower, termLower);
+        const bSimilarity = stringSimilarity.compareTwoStrings(bNameLower, termLower);
+
+        return bSimilarity - aSimilarity; // Higher similarity score comes first
+      }
+    });
+
+    return sortedCharacters;
   };
 
   const getRandomAnimePictures = () => {
-    const randomSeries = WallpaperData.sort(() => 0.5 - Math.random()).slice(0, 5);
-    const randomResults = randomSeries.flatMap((series) => series.characters);
+    const randomResults = [];
+  
+    WallpaperData.forEach((series) => {
+      const randomIndex = Math.floor(Math.random() * series.characters.length);
+      const randomCharacter = series.characters[randomIndex];
+      randomResults.push(randomCharacter);
+    });
+  
     return randomResults;
   };
+  
+
+  useEffect(() => {
+    setRandomPictures(getRandomAnimePictures());
+  }, []);
 
   return (
     <div>
@@ -75,40 +92,31 @@ const WallpaperComponent = () => {
           value={searchTerm}
           onChange={handleSearchChange}
         />
-        <button onClick={handleSearch}>Search</button>
       </div>
 
       {loading && <p>Loading...</p>}
 
-      {searchResults.length > 0 && !loading && (
+      {searchResults.length > 0 && !loading ? (
         <div>
-          <h3>Search Results:</h3>
-          {searchResults.map((series, index) => (
+          {searchResults.map((character, index) => (
             <div key={index}>
-              {series.characters.map((character, i) => (
-                <div key={i}>
-                  <h3>{character.name}</h3>
-                  <img src={character.img} alt={character.name} />
-                </div>
-              ))}
-            </div>
-          ))}
-        </div>
-      )}
-
-      {!searchResults.length > 0 && !loading && (
-        <div>
-          {randomPictures.map((character, index) => (
-            <div key={index}>
-              <h3>{character.name}</h3>
               <img src={character.img} alt={character.name} />
             </div>
           ))}
         </div>
+      ) : (
+        <div>
+          {randomPictures.length > 0 ? (
+            randomPictures.map((character, index) => (
+              <div key={index}>
+                <img src={character.img} alt={character.name} />
+              </div>
+            ))
+          ) : (
+            <p>No search results found. Showing random wallpapers.</p>
+          )}
+        </div>
       )}
-        {searchResults.length === 0 && !loading && searchTerm.length >= 3 && (
-        <p>Search not found.</p>
-        )}
     </div>
   );
 };
