@@ -2,6 +2,18 @@ import minato from "../images/minato (2).jpg"
 import minxkush from "../images/minato-kushina.jpg"
 import minato2 from "../images/minato.jpg"
 import naruto from "../images/naruto.jpg"
+import shisui from "../images/shisui.jpeg";
+import shisui1 from "../images/shisui1.jpg";
+import shisui2 from "../images/shisui2.jpg";
+import shisui3 from "../images/shisui3.jpg";
+import shisui4 from "../images/shisui4.jpg";
+import shisui5 from "../images/shisui5.png";
+import shisui6 from "../images/shisui6.jpg";
+import shisui7 from "../images/shisui7.jpg";
+import shisui8 from "../images/shisui8.jpg";
+import shisui9 from "../images/shisui9.jpeg";
+import shisui10 from "../images/shisui10.jpg";
+import shisui11 from "../images/shisui11.jpg";
 import whitebeard from "../images/whitebeard.jpg"
 import usopp from "../images/usopp.jpg"
 import shanks4 from "../images/shanks4.jpg"
@@ -110,6 +122,54 @@ const WallpaperData = [
         img: 'https://example.com/orochimaru.jpg',
       },
       {
+        name: 'Shisui Uchiha',
+        img: shisui,
+      },
+      {
+        name: 'Shisui Uchiha 1',
+        img: shisui1,
+      },
+      {
+        name: 'Shisui Uchiha 2',
+        img: shisui2,
+      },
+      {
+        name: 'Shisui Uchiha 3',
+        img: shisui3,
+      },
+      {
+        name: 'Shisui Uchiha 4',
+        img: shisui4,
+      },
+      {
+        name: 'Shisui Uchiha 5',
+        img: shisui5,
+      },
+      {
+        name: 'Shisui Uchiha 6',
+        img: shisui6,
+      },
+      {
+        name: 'Shisui Uchiha 7',
+        img: shisui7,
+      },
+      {
+        name: 'Shisui Uchiha 8',
+        img: shisui8,
+      },
+      {
+        name: 'Shisui Uchiha 9',
+        img: shisui9,
+      },
+      {
+        name: 'Shisui Uchiha 10',
+        img: shisui10,
+      },
+      {
+        name: 'Shisui Uchiha 11',
+        img: shisui11,
+      },
+      {
         name: 'Minato Namikaze',
         img: minato,
       },
@@ -124,10 +184,6 @@ const WallpaperData = [
       {
         name: 'Kushina Uzumaki',
         img: 'https://example.com/kushina.jpg',
-      },
-      {
-        name: 'Shisui Uchiha',
-        img: 'https://example.com/shisui.jpg',
       },
       {
         name: 'Tobirama Senju',

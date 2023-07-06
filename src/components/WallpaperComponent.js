@@ -70,9 +70,8 @@ const WallpaperComponent = () => {
     const randomResults = [];
   
     WallpaperData.forEach((series) => {
-      const randomIndex = Math.floor(Math.random() * series.characters.length);
-      const randomCharacter = series.characters[randomIndex];
-      randomResults.push(randomCharacter);
+      const randomCharacters = series.characters.sort(() => 0.5 - Math.random()).slice(0, 5); // Display 5 random characters
+      randomResults.push(...randomCharacters);
     });
   
     return randomResults;
@@ -104,18 +103,16 @@ const WallpaperComponent = () => {
             </div>
           ))}
         </div>
-      ) : (
+      ) : randomPictures.length > 0 ? (
         <div>
-          {randomPictures.length > 0 ? (
-            randomPictures.map((character, index) => (
-              <div key={index}>
-                <img src={character.img} alt={character.name} />
-              </div>
-            ))
-          ) : (
-            <p>No search results found. Showing random wallpapers.</p>
-          )}
+          {randomPictures.map((character, index) => (
+            <div key={index}>
+              <img src={character.img} alt={character.name} />
+            </div>
+          ))}
         </div>
+      ) : (
+        <p>No search results found. Showing random wallpapers.</p>
       )}
     </div>
   );
