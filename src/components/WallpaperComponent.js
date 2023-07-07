@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import WallpaperData from './WallpaperData';
 import stringSimilarity from 'string-similarity';
+import './WallpaperComponent.css'; // Import the CSS file for styling
 
 const WallpaperComponent = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -13,15 +14,16 @@ const WallpaperComponent = () => {
   }, []);
 
   const handleSearchChange = (e) => {
-    const term = e.target.value;
-    setSearchTerm(term);
+    setSearchTerm(e.target.value);
+  };
 
-    if (term.length >= 3) {
+  useEffect(() => {
+    if (searchTerm.length >= 3) {
       handleSearch();
     } else {
       setSearchResults([]);
     }
-  };
+  }, [searchTerm]);
 
   const handleSearch = () => {
     setLoading(true);
@@ -68,53 +70,76 @@ const WallpaperComponent = () => {
 
   const getRandomAnimePictures = () => {
     const randomResults = [];
-  
+
     WallpaperData.forEach((series) => {
-      const randomCharacters = series.characters.sort(() => 0.5 - Math.random()).slice(0, 5); // Display 5 random characters
+      const randomCharacters = series.characters.sort(() => 0.5 - Math.random()).slice(0, 12); // Display 8 random characters
       randomResults.push(...randomCharacters);
     });
-  
+
     return randomResults;
   };
-  
 
   useEffect(() => {
     setRandomPictures(getRandomAnimePictures());
   }, []);
 
+  const handleSearchButtonClick = () => {
+    if (searchTerm.length >= 3) {
+      handleSearch();
+    }
+  };
+
   return (
-    <div>
-      <div>
-        <input
-          type="text"
-          placeholder="Search series, genre, or character..."
-          value={searchTerm}
-          onChange={handleSearchChange}
-        />
+    <>
+      <div className='home-background'>
+
       </div>
+        <div className="wallpaper-container">
+          <div className="search-bar">
+            <input
+              type="text"
+              placeholder="Search series, genre, or character..."
+              value={searchTerm}
+              onChange={handleSearchChange}
+            />
+            <button onClick={handleSearchButtonClick}>Search</button>
+          </div>
 
-      {loading && <p>Loading...</p>}
+          {loading && <p>Loading...</p>}
 
-      {searchResults.length > 0 && !loading ? (
-        <div>
-          {searchResults.map((character, index) => (
-            <div key={index}>
-              <img src={character.img} alt={character.name} />
+          {searchTerm.length >= 3 && searchResults.length === 0 && (
+            <h3>{searchTerm} not found. Showing random wallpapers.</h3>
+          )}
+
+          {searchResults.length > 0 && !loading && (
+            <div className="image-container">
+              {searchResults.map((character, index) => (
+                <div className="image-item" key={index}>
+                  <img src={character.img} alt={character.name} />
+                  <div className="image-overlay">
+                    <h4>{character.name}</h4>
+                    <p>{character.series}</p>
+                  </div>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
-      ) : randomPictures.length > 0 ? (
-        <div>
-          {randomPictures.map((character, index) => (
-            <div key={index}>
-              <img src={character.img} alt={character.name} />
+          )}
+
+          {randomPictures.length > 0 && (
+            <div className="image-container">
+              {randomPictures.map((character, index) => (
+                <div className="image-item" key={index}>
+                  <img src={character.img} alt={character.name} />
+                  <div className="image-overlay">
+                    <h4>{character.name}</h4>
+                    <p>{character.series}</p>
+                  </div>
+                </div>
+              ))}
             </div>
-          ))}
+          )}
         </div>
-      ) : (
-        <p>No search results found. Showing random wallpapers.</p>
-      )}
-    </div>
+    </>
   );
 };
 
