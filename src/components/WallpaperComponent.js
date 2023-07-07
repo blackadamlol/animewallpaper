@@ -8,6 +8,7 @@ const WallpaperComponent = () => {
   const [searchResults, setSearchResults] = useState([]);
   const [randomPictures, setRandomPictures] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
 
   useEffect(() => {
     handleSearch();
@@ -72,7 +73,7 @@ const WallpaperComponent = () => {
     const randomResults = [];
 
     WallpaperData.forEach((series) => {
-      const randomCharacters = series.characters.sort(() => 0.5 - Math.random()).slice(0, 12); // Display 8 random characters
+      const randomCharacters = series.characters.sort(() => 0.5 - Math.random()).slice(0, 12); // Display 12 random characters
       randomResults.push(...randomCharacters);
     });
 
@@ -89,56 +90,75 @@ const WallpaperComponent = () => {
     }
   };
 
+  const handleViewImage = (image) => {
+    setSelectedImage(image);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedImage(null);
+  };
+
   return (
     <>
-      <div className='home-background'>
-
-      </div>
-        <div className="wallpaper-container">
-          <div className="search-bar">
-            <input
-              type="text"
-              placeholder="Search series, genre, or character..."
-              value={searchTerm}
-              onChange={handleSearchChange}
-            />
-            <button onClick={handleSearchButtonClick}>Search</button>
-          </div>
-
-          {loading && <p>Loading...</p>}
-
-          {searchTerm.length >= 3 && searchResults.length === 0 && (
-            <h3>{searchTerm} not found. Showing random wallpapers.</h3>
-          )}
-
-          {searchResults.length > 0 && !loading && (
-            <div className="image-container">
-              {searchResults.map((character, index) => (
-                <div className="image-item" key={index}>
-                  <img src={character.img} alt={character.name} />
-                  <div className="image-overlay">
-                    <h4>{character.name}</h4>
-                    <p>{character.series}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-
-          {randomPictures.length > 0 && (
-            <div className="image-container">
-              {randomPictures.map((character, index) => (
-                <div className="image-item" key={index}>
-                  <img src={character.img} alt={character.name} />
-                  <div className="image-overlay">
-                    <h4>{character.name}</h4>
-                    <p>{character.series}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
+      <div className='home-background'></div>
+      <div className="wallpaper-container">
+        <div className="search-bar">
+          <input
+            type="text"
+            placeholder="Search series, genre, or character..."
+            value={searchTerm}
+            onChange={handleSearchChange}
+          />
+          <button onClick={handleSearchButtonClick}>Search</button>
         </div>
+
+        {loading && <p>Loading...</p>}
+
+        {searchTerm.length >= 3 && searchResults.length === 0 && (
+          <h3>{searchTerm} not found. Showing random wallpapers.</h3>
+        )}
+
+        <div className="image-container">
+          {searchResults.map((character, index) => (
+            <div className="image-item" key={index}>
+              <img
+                src={character.img}
+                alt={character.name}
+                onClick={() => handleViewImage(character.img)}
+              />
+              <div className="image-overlay">
+                <h4>{character.name}</h4>
+                <p>{character.series}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="image-container">
+          {randomPictures.map((character, index) => (
+            <div className="image-item" key={index}>
+              <img
+                src={character.img}
+                alt={character.name}
+                onClick={() => handleViewImage(character.img)}
+              />
+              <div className="image-overlay">
+                <h4>{character.name}</h4>
+                <p>{character.series}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {selectedImage && (
+          <div className="modal">
+            <div className="modal-content">
+              <span className="close" onClick={handleCloseModal}>&times;</span>
+              <img src={selectedImage} alt="Full View" className="full-view-image" />
+            </div>
+          </div>
+        )}
+      </div>
     </>
   );
 };
