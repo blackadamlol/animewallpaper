@@ -112,13 +112,21 @@ const WallpaperComponent = () => {
 
   const handleLoadMore = () => {
     console.log("Load more clicked");
-    setRandomPictures((prevRandomPictures) => {
-      const newRandomPictures = getRandomAnimePictures();
-      console.log("New random pictures:", newRandomPictures);
-      return [...prevRandomPictures, ...newRandomPictures];
-    });
+    if (searchTerm && searchTerm.length >= 3) {
+      setSearchResults((prevSearchResults) => {
+        const newRandomPictures = getRandomAnimePictures();
+        console.log("New random pictures:", newRandomPictures);
+        return [...prevSearchResults, ...newRandomPictures];
+      });
+    } else {
+      setRandomPictures((prevRandomPictures) => {
+        const newRandomPictures = getRandomAnimePictures();
+        console.log("New random pictures:", newRandomPictures);
+        return [...prevRandomPictures, ...newRandomPictures];
+      });
+    }
   };
-
+  
   return (
     <>
       <div className="top-image"></div>
