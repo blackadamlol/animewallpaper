@@ -60,6 +60,14 @@ import ace4 from "../images/ace4.jpg"
 import ace5 from "../images/ace5.jpg"
 import ace6 from "../images/ace6.jpg"
 import ace7 from "../images/ace7.png"
+import luffy1 from "../images/luffy1.jpg"
+import luffy2 from "../images/luffy2.jpg"
+import luffy3 from "../images/luffy3.jpg"
+import luffy5 from "../images/luffy5.jpg"
+import luffy6 from "../images/luffy6.jpg"
+import luffy7 from "../images/luffy7.jpg"
+import luffy8 from "../images/luffy8.png"
+import luffy9 from "../images/luffy9.jpeg"
 
 const WallpaperData = [
   {
@@ -98,7 +106,7 @@ const WallpaperData = [
         img: obito,
       },
       {
-        name: 'Obito Uchiha 2',
+        name: 'Obito Uchiha 1',
         img: obito1,
       },
       {
@@ -213,7 +221,35 @@ const WallpaperData = [
       },
       {
         name: 'Monkey D. Luffy',
-        img: luffyxsaboxace,
+        img: luffy1,
+      },
+      {
+        name: 'Monkey D. Luffy',
+        img: luffy2,
+      },
+      {
+        name: 'Monkey D. Luffy',
+        img: luffy3,
+      },
+      {
+        name: 'Monkey D. Luffy',
+        img: luffy5,
+      },
+      {
+        name: 'Monkey D. Luffy',
+        img: luffy6,
+      },
+      {
+        name: 'Monkey D. Luffy',
+        img: luffy7,
+      },
+      {
+        name: 'Monkey D. Luffy',
+        img: luffy8,
+      },
+      {
+        name: "Monkey D. Luffy",
+        img: luffy9,
       },
       {
         name: "Monkey D. Garps",

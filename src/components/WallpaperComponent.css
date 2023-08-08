@@ -13,6 +13,7 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
+  text-align: center;
 }
 
 .search-bar {
@@ -61,7 +62,7 @@ button {
 
 .image-item {
   position: relative;
-  width: 400px;
+  width: 500px;
   height: 400px;
   overflow: hidden;
   border-radius: 5px;
@@ -78,7 +79,6 @@ button {
 .image-item:hover img {
   transform: scale(1.1);
 }
-
 .image-overlay {
   position: absolute;
   bottom: 0;
@@ -153,9 +153,9 @@ button {
   }
 
   .image-item {
-    width: calc(33.33% - 10px);
+    width: calc(25% - 15px); /* Adjusted width */
     height: auto;
-    max-height: 300px;
+    max-height: 400px;
   }
 }
 
@@ -170,7 +170,7 @@ button {
   }
 
   .image-item {
-    width: calc(25% - 10px);
+    width: calc(25% - 15px); /* Adjusted width */
     height: auto;
     max-height: 400px;
   }

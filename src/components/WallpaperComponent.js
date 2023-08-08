@@ -12,6 +12,7 @@ const WallpaperComponent = () => {
 
   useEffect(() => {
     handleSearch();
+    setRandomPictures(getRandomAnimePictures());
   }, []);
 
   const handleSearchChange = (e) => {
@@ -29,17 +30,27 @@ const WallpaperComponent = () => {
   const handleSearch = () => {
     setLoading(true);
 
-    const matchedCharacters = WallpaperData.flatMap((series) =>
-      series.characters.filter((character) =>
-        character.name.toLowerCase().includes(searchTerm.toLowerCase())
-      )
+    const matchedSeries = WallpaperData.filter((series) =>
+      series.series.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    if (matchedCharacters.length > 0) {
-      const sortedCharacters = sortSearchResults(matchedCharacters);
+    if (matchedSeries.length > 0) {
+      const seriesCharacters = matchedSeries.flatMap((series) => series.characters);
+      const sortedCharacters = sortSearchResults(seriesCharacters);
       setSearchResults(sortedCharacters);
     } else {
-      setSearchResults([]);
+      const matchedCharacters = WallpaperData.flatMap((series) =>
+        series.characters.filter((character) =>
+          character.name.toLowerCase().includes(searchTerm.toLowerCase())
+        )
+      );
+
+      if (matchedCharacters.length > 0) {
+        const sortedCharacters = sortSearchResults(matchedCharacters);
+        setSearchResults(sortedCharacters);
+      } else {
+        setSearchResults([]);
+      }
     }
 
     setLoading(false);
@@ -54,15 +65,14 @@ const WallpaperComponent = () => {
       const bNameLower = b.name.toLowerCase();
 
       if (aNameLower === termLower) {
-        return -1; // Exact match should be at the top
+        return -1;
       } else if (bNameLower === termLower) {
-        return 1; // Exact match should be at the top
+        return 1;
       } else {
-        // Sort by string similarity score
         const aSimilarity = stringSimilarity.compareTwoStrings(aNameLower, termLower);
         const bSimilarity = stringSimilarity.compareTwoStrings(bNameLower, termLower);
 
-        return bSimilarity - aSimilarity; // Higher similarity score comes first
+        return bSimilarity - aSimilarity;
       }
     });
 
@@ -73,16 +83,11 @@ const WallpaperComponent = () => {
     const randomResults = [];
 
     WallpaperData.forEach((series) => {
-      const randomCharacters = series.characters.sort(() => 0.5 - Math.random()).slice(0, 12); // Display 12 random characters
-      randomResults.push(...randomCharacters);
+      randomResults.push(...series.characters.sort(() => 0.5 - Math.random()));
     });
 
     return randomResults;
   };
-
-  useEffect(() => {
-    setRandomPictures(getRandomAnimePictures());
-  }, []);
 
   const handleSearchButtonClick = () => {
     if (searchTerm.length >= 3) {
@@ -105,81 +110,74 @@ const WallpaperComponent = () => {
     setSelectedImage(null);
   };
 
-return (
-  <>
-    <div className="top-image"></div>
-    <div className="wallpaper-container">
-      <div className="search-bar">
-        <input
-          type="text"
-          placeholder="Search series, genre, or character..."
-          value={searchTerm}
-          onChange={handleSearchChange}
-        />
-        <button onClick={handleSearchButtonClick}>Search</button>
-      </div>
+  const handleLoadMore = () => {
+    console.log("Load more clicked");
+    setRandomPictures((prevRandomPictures) => {
+      const newRandomPictures = getRandomAnimePictures();
+      console.log("New random pictures:", newRandomPictures);
+      return [...prevRandomPictures, ...newRandomPictures];
+    });
+  };
 
-      {loading && <p>Loading...</p>}
-
-      {searchTerm.length >= 3 && searchResults.length === 0 && (
-        <h3>{searchTerm} not found. Showing random wallpapers.</h3>
-      )}
-
-      <div className="image-container">
-        {searchResults.map((character, index) => (
-          <div className="image-item" key={index}>
-            <img
-              src={character.img}
-              alt={character.name}
-              onClick={() => handleViewImage(character.img)}
-            />
-            <div className="image-overlay">
-              <h4>{character.name}</h4>
-              <p>{character.series}</p>
-              <button
-                className="download-button"
-                onClick={() => handleDownloadImage(character.img)}
-              >
-                Download
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      <div className="image-container">
-        {randomPictures.map((character, index) => (
-          <div className="image-item" key={index}>
-            <img
-              src={character.img}
-              alt={character.name}
-              onClick={() => handleViewImage(character.img)}
-            />
-            <div className="image-overlay">
-              <h4>{character.name}</h4>
-              <p>{character.series}</p>
-              <button
-                className="download-button"
-                onClick={() => handleDownloadImage(character.img)}
-              >
-                Download
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {selectedImage && (
-        <div className="modal">
-          <div className="modal-content">
-            <span className="close" onClick={handleCloseModal}>&times;</span>
-            <img src={selectedImage} alt="Full View" className="full-view-image" />
-          </div>
+  return (
+    <>
+      <div className="top-image"></div>
+      <div className="wallpaper-container">
+        <div className="search-bar">
+          <input
+            type="text"
+            placeholder="Search series, genre, or character..."
+            value={searchTerm}
+            onChange={handleSearchChange}
+          />
+          <button onClick={handleSearchButtonClick}>Search</button>
         </div>
-      )}
-    </div>
-  </>
-);
+
+        {loading && <p>Loading...</p>}
+
+        {searchTerm.length >= 3 && searchResults.length === 0 && (
+          <h3>{searchTerm} not found. Showing random wallpapers.</h3>
+        )}
+
+        <div className="image-container">
+          {(searchResults.length > 0 ? searchResults : randomPictures).map((character, index) => (
+            <div className="image-item" key={index}>
+              <img
+                src={character.img}
+                alt={character.name}
+                onClick={() => handleViewImage(character.img)}
+              />
+              <div className="image-overlay">
+                <h4>{character.name}</h4>
+                <p>{character.series}</p>
+                <button
+                  className="download-button"
+                  onClick={() => handleDownloadImage(character.img)}
+                >
+                  Download
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="load-more-button-container">
+          <button className="load-more-button" onClick={handleLoadMore}>
+            Load More Images
+          </button>
+        </div>
+
+        {selectedImage && (
+          <div className="modal">
+            <div className="modal-content">
+              <span className="close" onClick={handleCloseModal}>&times;</span>
+              <img src={selectedImage} alt="Full View" className="full-view-image" />
+            </div>
+          </div>
+        )}
+      </div>
+    </>
+  );
 };
 
 export default WallpaperComponent;
